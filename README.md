@@ -1,40 +1,23 @@
-# FHAvatar project website
+# [CVPR 2026] FHAvatar: Fast and High-Fidelity Reconstruction of Face-and-Hair Composable 3D Head Avatar from Few Casual Captures
 
-Project page for **FHAvatar: Fast and High-Fidelity Reconstruction of Face-and-Hair Composable 3D Head Avatar from Few Casual Captures**.
+- [Project Website](https://unikeen.github.io/FHAvatar/)
+- [Paper (PDF)](https://arxiv.org/pdf/2603.23345)
+- [arXiv](https://arxiv.org/abs/2603.23345)
+- [CVF Open Access](https://openaccess.thecvf.com/content/CVPR2026/html/Sun_FHAvatar_Fast_and_High-Fidelity_Reconstruction_of_Face-and-Hair_Composable_3D_Head_CVPR_2026_paper.html)
+- [Video](https://unikeen.github.io/FHAvatar/#video)
 
-- Website: https://unikeen.github.io/FHAvatar/
-- Paper: https://arxiv.org/abs/2603.23345
-- Conference: CVPR 2026
-- BibTeX metadata: https://openaccess.thecvf.com/content/CVPR2026/html/Sun_FHAvatar_Fast_and_High-Fidelity_Reconstruction_of_Face-and-Hair_Composable_3D_Head_CVPR_2026_paper.html
+## BibTeX
 
-## Development
-
-React + TypeScript + Vite, with locally hosted Poppins fonts. Requires Node.js 24 (minimum 22.12).
-
-```sh
-npm ci
-npm run dev
+```bibtex
+@inproceedings{Sun_2026_CVPR,
+  title   = {FHAvatar: Fast and High-Fidelity Reconstruction of
+             Face-and-Hair Composable 3D Head Avatar from Few Casual Captures},
+  author  = {Sun, Yujie and Cai, Zhuoqiang and Niu, Chaoyue and
+             Chen, Jianchuan and Chen, Zhiwen and Lv, Chengfei and Wu, Fan},
+  booktitle = {Proceedings of the IEEE/CVF Conference on
+               Computer Vision and Pattern Recognition (CVPR)},
+  month   = {June},
+  year    = {2026},
+  pages   = {4132--4144}
+}
 ```
-
-```sh
-npm run build
-npm run preview
-```
-
-The production site is static. Pushes to `main` build and deploy it through GitHub Actions to GitHub Pages. The Vite base path comes from `GITHUB_REPOSITORY`, so asset URLs work under the repository subdirectory.
-
-## Content
-
-- `src/App.tsx`: authors, paper text, sections, and citation.
-- `src/results.json`: all rows of paper Table 1, grouped by input count. Rendered as an accessible HTML table.
-- `src/index.css`: responsive layout and purple–pink theme inspired by the paper teaser.
-- `public/assets/`: figures rendered from the author's original PDFs, plus the demonstration poster.
-- `public/videos/fhavatar-demo.mp4`: original compressed research demonstration (loaded on demand).
-
-The page links to the arXiv paper; no model-code release URL is assumed. Website source is linked separately in the footer.
-
-## Attribution
-
-Design references: [Nerfies](https://nerfies.github.io/) and [indoor-vln-website](https://github.com/UNIkeEN/indoor-vln-website). The website implementation follows the latter's React / TypeScript / Vite stack and local Poppins typography.
-
-Paper and figures are attributed to Yujie Sun, Zhuoqiang Cai, Chaoyue Niu, Jianchuan Chen, Zhiwen Chen, Chengfei Lv, and Fan Wu, as published in [arXiv:2603.23345](https://arxiv.org/abs/2603.23345) under CC BY 4.0. Original video supplied by the author. Poppins is distributed under the SIL Open Font License; see `src/assets/fonts/poppins/OFL.txt`.

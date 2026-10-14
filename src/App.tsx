@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, Check, Copy, FileText, Play, Quote } from 'lucide-react'
 import { SiArxiv } from 'react-icons/si'
 import results from './results.json'
+import figures from './figures.json'
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`
 const sections = [['overview', 'Overview'], ['abstract', 'Abstract'], ['video', 'Video'], ['method', 'Method'], ['results', 'Results'], ['applications', 'Applications'], ['citation', 'Citation']]
@@ -26,13 +27,27 @@ const bibtex = `@inproceedings{Sun_2026_CVPR,
   pages   = {4132--4144}
 }`
 
-function Figure({ name, alt, caption, eager = false }: { name: string; alt: string; caption: string; eager?: boolean }) {
+type FigureName = keyof typeof figures
+
+function Figure({ name, alt, eager = false }: { name: FigureName; alt: string; eager?: boolean }) {
+  const { width, height, caption } = figures[name]
   return <figure className={`paper-figure figure-${name}`}>
     <a href={asset(`assets/${name}.png`)} target="_blank" rel="noreferrer" aria-label={`View full-size figure: ${alt}`}>
-      <img src={asset(`assets/${name}.png`)} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+      <img src={asset(`assets/${name}.png`)} alt={alt} width={width} height={height} loading={eager ? 'eager' : 'lazy'} decoding="async" />
     </a>
     <figcaption>{caption}</figcaption>
   </figure>
+}
+
+function ExpandableFigure({ title, name, alt, description }: { title: string; name: FigureName; alt: string; description?: string }) {
+  const [open, setOpen] = useState(false)
+  return <details className="result-disclosure" onToggle={event => setOpen(event.currentTarget.open)}>
+    <summary>{title}<span className="disclosure-icon" aria-hidden="true">+</span></summary>
+    {open && <div className="disclosure-content">
+      {description && <p className="section-intro">{description}</p>}
+      <Figure name={name} alt={alt} eager />
+    </div>}
+  </details>
 }
 
 function ResultsTable() {
@@ -90,7 +105,7 @@ function App() {
             <a className="pill" href="#video"><Play size={17} /> Video</a>
             <a className="pill" href="#citation"><Quote size={17} /> BibTeX</a>
           </nav>
-          <div className="teaser"><Figure name="teaser" eager alt="FHAvatar reconstructs separate face and hair components from casual phone captures, enabling animation, hairstyle transfer and stylized editing." caption="A few casual captures. A composable 3D avatar. Reconstruct, animate, and personalize face and hair in minutes." /></div>
+          <div className="teaser"><Figure name="teaser" eager alt="FHAvatar reconstructs separate face and hair components from casual phone captures, enabling animation, hairstyle transfer and stylized editing." /></div>
           <div className="highlights">
             <div><strong>Few captures</strong><span>Flexible views & expressions</span></div>
             <div><strong>Face + hair</strong><span>Explicitly composable Gaussians</span></div>
@@ -117,7 +132,7 @@ function App() {
       <section id="method" className="section shaded" aria-labelledby="method-title"><div className="container">
         <h2 id="method-title">One Avatar. Two Composable Components.</h2>
         <p className="section-intro">An aggregated transformer brings arbitrary views together. Two dedicated branches reconstruct face and hair in UV space.</p>
-        <Figure name="pipeline" alt="Architecture of FHAvatar: image and geometry tokenization, aggregated transformer, and separate face and strand-based hair Gaussian decoders." caption="Method overview. Image, head, and hair tokens are fused across views, then decoded into planar face Gaussians and strand-based hair Gaussians for joint rendering." />
+        <Figure name="pipeline" alt="Architecture of FHAvatar: image and geometry tokenization, aggregated transformer, and separate face and strand-based hair Gaussian decoders." />
         <div className="method-steps">
           <div><span className="step-number">01</span><h3>Capture & encode</h3><p>Image features, a template head mesh, and hair priors encode appearance and geometry from a variable number of casual images.</p></div>
           <div><span className="step-number">02</span><h3>Aggregate & reconstruct</h3><p>Cross-view attention fuses the observations. Dedicated decoders preserve the distinct geometry of facial surfaces and hair strands.</p></div>
@@ -128,27 +143,29 @@ function App() {
       <section id="results" className="section" aria-labelledby="results-title"><div className="container">
         <h2 id="results-title">Reconstruction Results</h2>
         <p className="section-intro">Novel identities, viewpoints, and expressions—from single images to multiple casual captures.</p>
-        <Figure name="comparison" alt="Qualitative reconstruction comparison between FHAvatar, LAM, GAGAvatar, DiffusionRig, FlashAvatar, GaussianAvatars and MeGA, alongside ground truth." caption="Qualitative comparison on in-the-wild data and NeRSemble. FHAvatar preserves identity and fine detail while supporting novel views and expression reenactment." />
+        <Figure name="comparison" alt="Qualitative reconstruction comparison between FHAvatar, LAM, GAGAvatar, DiffusionRig, FlashAvatar, GaussianAvatars and MeGA, alongside ground truth." />
         <h3 className="subsection-title">Quality and Efficiency</h3>
         <ResultsTable />
-        <h3 className="subsection-title">More Views, Finer Details</h3>
-        <p className="section-intro">A single model handles different input counts. Additional observations progressively reveal finer facial details.</p>
-        <Figure name="input-views" alt="Reconstruction quality as the number of input images increases, including image comparisons and quality plots." caption="Incremental reconstruction. Quality improves rapidly from one to six input frames and gradually plateaus with additional observations." />
-        <details className="additional-results"><summary>Explore ablations and challenging captures <span>+</span></summary>
-          <Figure name="ablation" alt="Ablation comparisons for the hair branch, region loss, and fast refinement." caption="Each component contributes to reconstruction quality: strand-based hair modeling, region-aware supervision, and fast refinement." />
-          <Figure name="challenging-inputs" alt="FHAvatar reconstructions from sparse captures and inputs without a near-frontal view." caption="Additional results with sparse observations, no near-frontal input, and uncovered novel viewpoints." />
-        </details>
+        <div className="additional-results">
+          <ExpandableFigure title="More Views, Finer Details" name="input-views"
+            description="A single model handles different input counts. Additional observations progressively reveal finer facial details."
+            alt="PSNR and SSIM versus the number of input frames, with facial detail comparisons for 3 and 10 frames." />
+          <ExpandableFigure title="Ablation Study" name="ablation"
+            alt="Comparisons without the hair branch, finetuning, or region loss, alongside the full model and ground truth." />
+          <ExpandableFigure title="Challenging Inputs and Viewpoints" name="challenging-inputs"
+            alt="Reconstruction results from non-frontal or sparse inputs, and renderings at uncovered viewpoints." />
+        </div>
       </div></section>
 
       <section id="applications" className="section shaded" aria-labelledby="applications-title"><div className="container">
         <h2 id="applications-title">Reconstruct Once. Make It Your Own.</h2>
         <p className="section-intro">Explicit face–hair separation and UV-space binding make avatars easy to personalize.</p>
         <div className="applications-grid">
-          <article><h3>Hairstyle Transfer</h3><p>Compose one avatar’s face with another’s hair while retaining the target identity and animation controls.</p><Figure name="hair-transfer" alt="Hairstyle transfer between reconstructed avatars of different identities." caption="Independently reconstructed face and hair components can be recombined across identities." /></article>
-          <article><h3>3D-Consistent Stylized Editing</h3><p>Edit the 2D texture map to customize the 3D avatar, without running reconstruction again.</p><Figure name="stylized-editing" alt="Texture edits producing face paint and stylized appearances that remain consistent across views." caption="Texture-space edits lift directly to animatable 3D Gaussians and stay consistent across viewpoints." /></article>
+          <article><h3>Hairstyle Transfer</h3><p>Compose one avatar’s face with another’s hair while retaining the target identity and animation controls.</p><Figure name="hair-transfer" alt="Hairstyle transfer between reconstructed avatars of different identities." /></article>
+          <article><h3>3D-Consistent Stylized Editing</h3><p>Edit the 2D texture map to customize the 3D avatar, without running reconstruction again.</p><Figure name="stylized-editing" alt="Texture edits producing face paint and stylized appearances that remain consistent across views." /></article>
         </div>
         <h3 className="subsection-title">A Range of Hairstyles</h3>
-        <Figure name="hairstyles" alt="Additional FHAvatar reconstruction examples with long, wavy and curly hair." caption="A strand-based representation accommodates long, wavy, and curly hairstyles." />
+        <Figure name="hairstyles" alt="Additional FHAvatar reconstruction examples with long, wavy and curly hair." />
       </div></section>
 
       <section id="citation" className="section" aria-labelledby="citation-title"><div className="reading-width">
@@ -156,7 +173,7 @@ function App() {
         <pre><code>{bibtex}</code></pre>
       </div></section>
     </main>
-    <footer><p>FHAvatar · Shanghai Jiao Tong University & Alibaba Group</p><p>Page design inspired by <a href="https://nerfies.github.io/">Nerfies</a> and <a href="https://github.com/UNIkeEN/indoor-vln-website">indoor-vln-website</a>. <a href="https://github.com/UNIkeEN/FHAvatar">Website source</a>.</p><p>Paper and figures: <a href="https://arxiv.org/abs/2603.23345">arXiv:2603.23345</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer>
+    <footer><p>FHAvatar · Shanghai Jiao Tong University & Alibaba Group</p><p>Page design inspired by <a href="https://nerfies.github.io/">Nerfies</a>. <a href="https://github.com/UNIkeEN/FHAvatar">Website source</a>.</p><p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer>
   </>
 }
 
