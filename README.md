@@ -2,8 +2,10 @@
 
 Project page for **FHAvatar: Fast and High-Fidelity Reconstruction of Face-and-Hair Composable 3D Head Avatar from Few Casual Captures**.
 
-- Website: https://unikeen.github.io/FHAvatar-website/
+- Website: https://unikeen.github.io/FHAvatar/
 - Paper: https://arxiv.org/abs/2603.23345
+- Conference: CVPR 2026
+- BibTeX metadata: https://openaccess.thecvf.com/content/CVPR2026/html/Sun_FHAvatar_Fast_and_High-Fidelity_Reconstruction_of_Face-and-Hair_Composable_3D_Head_CVPR_2026_paper.html
 
 ## Development
 

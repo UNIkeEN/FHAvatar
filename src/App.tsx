@@ -14,14 +14,16 @@ const authors = [
   { name: 'Chengfei Lv', affiliation: '2' },
   { name: 'Fan Wu', affiliation: '1' },
 ]
-const bibtex = `@article{sun2026fhavatar,
+const bibtex = `@inproceedings{Sun_2026_CVPR,
   title   = {FHAvatar: Fast and High-Fidelity Reconstruction of
              Face-and-Hair Composable 3D Head Avatar from Few Casual Captures},
   author  = {Sun, Yujie and Cai, Zhuoqiang and Niu, Chaoyue and
              Chen, Jianchuan and Chen, Zhiwen and Lv, Chengfei and Wu, Fan},
-  journal = {arXiv preprint arXiv:2603.23345},
+  booktitle = {Proceedings of the IEEE/CVF Conference on
+               Computer Vision and Pattern Recognition (CVPR)},
+  month   = {June},
   year    = {2026},
-  url     = {https://arxiv.org/abs/2603.23345}
+  pages   = {4132--4144}
 }`
 
 function Figure({ name, alt, caption, eager = false }: { name: string; alt: string; caption: string; eager?: boolean }) {
@@ -77,8 +79,8 @@ function App() {
     <main>
       <section id="overview" className="hero" aria-labelledby="project-title">
         <div className="container">
-          <p className="eyebrow">3D HEAD AVATAR RECONSTRUCTION</p>
-          <h1 id="project-title"><span className="project-name">FHAvatar</span><span className="title-description">Fast and High-Fidelity Reconstruction of<br className="desktop-break" /> Face-and-Hair Composable 3D Head Avatar<br className="desktop-break" /> from Few Casual Captures</span></h1>
+          <h1 id="project-title"><span className="project-name"><strong>FH</strong><span>Avatar</span></span>: Fast and High-Fidelity Reconstruction of Face-and-Hair Composable 3D Head Avatar from Few Casual Captures</h1>
+          <p className="venue">CVPR 2026</p>
           <div className="authors">{authors.map(author => <span className="author" key={author.name}>{author.href ? <a href={author.href}>{author.name}</a> : <span>{author.name}</span>}<sup>{author.affiliation}</sup></span>)}</div>
           <p className="affiliations"><span><sup>1</sup> Shanghai Jiao Tong University</span><span><sup>2</sup> Alibaba Group</span></p>
           <p className="author-notes">* Intern at Alibaba Group. <span>† Corresponding author.</span></p>
@@ -154,7 +156,7 @@ function App() {
         <pre><code>{bibtex}</code></pre>
       </div></section>
     </main>
-    <footer><p>FHAvatar · Shanghai Jiao Tong University & Alibaba Group</p><p>Page design inspired by <a href="https://nerfies.github.io/">Nerfies</a> and <a href="https://github.com/UNIkeEN/indoor-vln-website">indoor-vln-website</a>. <a href="https://github.com/UNIkeEN/FHAvatar-website">Website source</a>.</p><p>Paper and figures: <a href="https://arxiv.org/abs/2603.23345">arXiv:2603.23345</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer>
+    <footer><p>FHAvatar · Shanghai Jiao Tong University & Alibaba Group</p><p>Page design inspired by <a href="https://nerfies.github.io/">Nerfies</a> and <a href="https://github.com/UNIkeEN/indoor-vln-website">indoor-vln-website</a>. <a href="https://github.com/UNIkeEN/FHAvatar">Website source</a>.</p><p>Paper and figures: <a href="https://arxiv.org/abs/2603.23345">arXiv:2603.23345</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer>
   </>
 }
 
