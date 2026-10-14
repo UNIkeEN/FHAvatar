@@ -41,12 +41,6 @@
     "caption": "Stylize Editing. Texture-based editing or stylization on the reconstruction result enables convenient 3D-aware manipulation without re-inference.",
     "paperFigure": 7
   },
-  "challenging-inputs": {
-    "width": 2400,
-    "height": 1317,
-    "caption": "Results under challenging inputs and viewpoints",
-    "paperFigure": 9
-  },
   "hairstyles": {
     "width": 2400,
     "height": 479,

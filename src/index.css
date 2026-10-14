@@ -11,3 +11,5 @@
 
 /* Keep method names visible during horizontal scrolling, as in indoor-vln-website. */
 .table-scroll{box-shadow:0 14px 40px #51436b0b;overscroll-behavior-inline:contain}table{border-collapse:separate;border-spacing:0}th:first-child{position:sticky;left:0;z-index:1;background:#fff;border-right:1px solid var(--border)}thead th:first-child{background:#f3f1f9;z-index:2}.ours th:first-child{background:#eeebf7}tbody tr:hover th:first-child{background:#f7f5fc}
+
+.ablation-table{max-width:680px;margin:0 auto 28px}

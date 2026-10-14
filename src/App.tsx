@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
 import { ArrowUpRight, Check, Copy, FileText, Play, Quote } from 'lucide-react'
 import { SiArxiv } from 'react-icons/si'
 import results from './results.json'
 import figures from './figures.json'
+import ablationResults from './ablation.json'
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`
 const sections = [['overview', 'Overview'], ['abstract', 'Abstract'], ['video', 'Video'], ['method', 'Method'], ['results', 'Results'], ['applications', 'Applications'], ['citation', 'Citation']]
@@ -39,15 +41,28 @@ function Figure({ name, alt, eager = false }: { name: FigureName; alt: string; e
   </figure>
 }
 
-function ExpandableFigure({ title, name, alt, description }: { title: string; name: FigureName; alt: string; description?: string }) {
+function ExpandableFigure({ title, name, alt, description, children }: { title: string; name: FigureName; alt: string; description?: string; children?: ReactNode }) {
   const [open, setOpen] = useState(false)
   return <details className="result-disclosure" onToggle={event => setOpen(event.currentTarget.open)}>
     <summary>{title}<span className="disclosure-icon" aria-hidden="true">+</span></summary>
     {open && <div className="disclosure-content">
       {description && <p className="section-intro">{description}</p>}
+      {children}
       <Figure name={name} alt={alt} eager />
     </div>}
   </details>
+}
+
+function AblationTable() {
+  return <div className="table-scroll ablation-table" tabIndex={0} role="region" aria-label="Ablation study results">
+    <table>
+      <caption>Table 2. Ablation Study.</caption>
+      <thead><tr>{['Method', 'PSNR ↑', 'SSIM ↑', 'LPIPS ↓'].map(label => <th key={label} scope="col">{label}</th>)}</tr></thead>
+      <tbody>{ablationResults.map(([method, ...metrics]) => <tr key={method} className={method === 'Full' ? 'ours' : ''}>
+        <th scope="row">{method}</th>{metrics.map((value, index) => <td key={index}>{value}</td>)}
+      </tr>)}</tbody>
+    </table>
+  </div>
 }
 
 function ResultsTable() {
@@ -120,7 +135,7 @@ function App() {
       </div></section>
 
       <section id="video" className="section" aria-labelledby="video-title"><div className="container">
-        <h2 id="video-title">See FHAvatar in Action</h2>
+        <h2 id="video-title">Video Presentation</h2>
         <p className="section-intro">From casual captures to expressive, editable 3D head avatars.</p>
         <video className="demo-video" controls playsInline preload="none" poster={asset('assets/video-poster.jpg')} aria-label="FHAvatar research demonstration">
           <source src={asset('videos/fhavatar-demo.mp4')} type="video/mp4" />
@@ -130,41 +145,41 @@ function App() {
       </div></section>
 
       <section id="method" className="section shaded" aria-labelledby="method-title"><div className="container">
-        <h2 id="method-title">One Avatar. Two Composable Components.</h2>
+        <h2 id="method-title">Method</h2>
         <p className="section-intro">An aggregated transformer brings arbitrary views together. Two dedicated branches reconstruct face and hair in UV space.</p>
         <Figure name="pipeline" alt="Architecture of FHAvatar: image and geometry tokenization, aggregated transformer, and separate face and strand-based hair Gaussian decoders." />
         <div className="method-steps">
-          <div><span className="step-number">01</span><h3>Capture & encode</h3><p>Image features, a template head mesh, and hair priors encode appearance and geometry from a variable number of casual images.</p></div>
-          <div><span className="step-number">02</span><h3>Aggregate & reconstruct</h3><p>Cross-view attention fuses the observations. Dedicated decoders preserve the distinct geometry of facial surfaces and hair strands.</p></div>
-          <div><span className="step-number">03</span><h3>Refine & animate</h3><p>Optional fast refinement recovers identity-specific details. The resulting Gaussians follow the head mesh for real-time animation.</p></div>
+          <div><span className="step-number">01</span><h3>Feature Tokenizer</h3><p>Image features, a template head mesh, and hair priors encode appearance and geometry from a variable number of casual images.</p></div>
+          <div><span className="step-number">02</span><h3>Multi-View Fusion and Gaussian Decoding</h3><p>Cross-view attention fuses the observations. Dedicated decoders preserve the distinct geometry of facial surfaces and hair strands.</p></div>
+          <div><span className="step-number">03</span><h3>Optional Fast Refinement</h3><p>Optional fast refinement recovers identity-specific details. The resulting Gaussians follow the head mesh for real-time animation.</p></div>
         </div>
       </div></section>
 
       <section id="results" className="section" aria-labelledby="results-title"><div className="container">
-        <h2 id="results-title">Reconstruction Results</h2>
+        <h2 id="results-title">Main Results</h2>
         <p className="section-intro">Novel identities, viewpoints, and expressions—from single images to multiple casual captures.</p>
         <Figure name="comparison" alt="Qualitative reconstruction comparison between FHAvatar, LAM, GAGAvatar, DiffusionRig, FlashAvatar, GaussianAvatars and MeGA, alongside ground truth." />
-        <h3 className="subsection-title">Quality and Efficiency</h3>
+        <h3 className="subsection-title">Quantitative Results</h3>
         <ResultsTable />
         <div className="additional-results">
-          <ExpandableFigure title="More Views, Finer Details" name="input-views"
+          <ExpandableFigure title="Incremental Reconstruction" name="input-views"
             description="A single model handles different input counts. Additional observations progressively reveal finer facial details."
             alt="PSNR and SSIM versus the number of input frames, with facial detail comparisons for 3 and 10 frames." />
           <ExpandableFigure title="Ablation Study" name="ablation"
-            alt="Comparisons without the hair branch, finetuning, or region loss, alongside the full model and ground truth." />
-          <ExpandableFigure title="Challenging Inputs and Viewpoints" name="challenging-inputs"
-            alt="Reconstruction results from non-frontal or sparse inputs, and renderings at uncovered viewpoints." />
+            alt="Comparisons without the hair branch, finetuning, or region loss, alongside the full model and ground truth.">
+            <AblationTable />
+          </ExpandableFigure>
         </div>
       </div></section>
 
       <section id="applications" className="section shaded" aria-labelledby="applications-title"><div className="container">
-        <h2 id="applications-title">Reconstruct Once. Make It Your Own.</h2>
+        <h2 id="applications-title">More Applications</h2>
         <p className="section-intro">Explicit face–hair separation and UV-space binding make avatars easy to personalize.</p>
         <div className="applications-grid">
-          <article><h3>Hairstyle Transfer</h3><p>Compose one avatar’s face with another’s hair while retaining the target identity and animation controls.</p><Figure name="hair-transfer" alt="Hairstyle transfer between reconstructed avatars of different identities." /></article>
-          <article><h3>3D-Consistent Stylized Editing</h3><p>Edit the 2D texture map to customize the 3D avatar, without running reconstruction again.</p><Figure name="stylized-editing" alt="Texture edits producing face paint and stylized appearances that remain consistent across views." /></article>
+          <article><h3>Hairstyle Transferring</h3><p>Compose one avatar’s face with another’s hair while retaining the target identity and animation controls.</p><Figure name="hair-transfer" alt="Hairstyle transfer between reconstructed avatars of different identities." /></article>
+          <article><h3>Convenient Face Stylize Editing</h3><p>Edit the 2D texture map to customize the 3D avatar, without running reconstruction again.</p><Figure name="stylized-editing" alt="Texture edits producing face paint and stylized appearances that remain consistent across views." /></article>
         </div>
-        <h3 className="subsection-title">A Range of Hairstyles</h3>
+        <h3 className="subsection-title">Cases of Challenging Hairstyles</h3>
         <Figure name="hairstyles" alt="Additional FHAvatar reconstruction examples with long, wavy and curly hair." />
       </div></section>
 
