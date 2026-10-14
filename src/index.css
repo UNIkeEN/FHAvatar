@@ -13,3 +13,17 @@
 .table-scroll{box-shadow:0 14px 40px #51436b0b;overscroll-behavior-inline:contain}table{border-collapse:separate;border-spacing:0}th:first-child{position:sticky;left:0;z-index:1;background:#fff;border-right:1px solid var(--border)}thead th:first-child{background:#f3f1f9;z-index:2}.ours th:first-child{background:#eeebf7}tbody tr:hover th:first-child{background:#f7f5fc}
 
 .ablation-table{max-width:680px;margin:0 auto 28px}
+
+/* Keep disclosure labels readable while the tables adapt to narrow screens. */
+.additional-results summary{font-size:1.06rem}
+.additional-results summary .disclosure-icon{font-size:1.55rem;user-select:none;-webkit-user-select:none}
+@media(max-width:700px){
+  table{font-size:.82rem}
+  thead th{font-size:.79rem}
+  th,td{padding:11px 10px}
+  th:first-child{padding-left:12px}
+  caption{font-size:.82rem}
+  .table-controls>span,.table-controls button{font-size:.84rem}
+  .table-note{font-size:.79rem}
+  .additional-results summary{font-size:1rem}
+}

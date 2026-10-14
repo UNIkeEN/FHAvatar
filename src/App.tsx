@@ -141,7 +141,6 @@ function App() {
           <source src={asset('videos/fhavatar-demo.mp4')} type="video/mp4" />
           Your browser does not support embedded video. <a href={asset('videos/fhavatar-demo.mp4')}>Download the demonstration.</a>
         </video>
-        <p className="media-note">Full research demonstration · 6 min 9 sec · Reconstruction, animation, comparisons, and editing.</p>
       </div></section>
 
       <section id="method" className="section shaded" aria-labelledby="method-title"><div className="container">
@@ -188,7 +187,7 @@ function App() {
         <pre><code>{bibtex}</code></pre>
       </div></section>
     </main>
-    <footer><p>FHAvatar · Shanghai Jiao Tong University & Alibaba Group</p><p>Page design inspired by <a href="https://nerfies.github.io/">Nerfies</a>. <a href="https://github.com/UNIkeEN/FHAvatar">Website source</a>.</p><p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer>
+    <footer><p>Page design inspired by <a href="https://nerfies.github.io/">Nerfies</a>. <a href="https://github.com/UNIkeEN/FHAvatar">Website source</a>.</p><p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p></footer>
   </>
 }
 
